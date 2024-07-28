@@ -1,0 +1,31 @@
+post:
+  summary: Binary search using golang
+  operationId: algorithmBinarySearch
+  tags:
+    - algorithmBinarySearch
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/AlgorithmBinarySearchRequest"
+  responses:
+    '200':
+      description: Successful response with the index of the target in the array
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AlgorithmBinarySearchResponse"
+    '400':
+      description: Invalid input, e.g., array not sorted or missing parameters
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
