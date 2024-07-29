@@ -1,0 +1,28 @@
+components:
+  schemas:
+    AlgorithmBinarySearchRequest:
+      type: object
+      properties:
+        array:
+          type: array
+          items:
+            type: integer
+          description: An array of integers to search within, must be sorted.
+        target:
+          type: integer
+          description: The target integer to search for in the array.
+      required:
+        - array
+        - target
+    AlgorithmBinarySearchResponse:
+      type: object
+      properties:
+        index:
+          type: integer
+          description: The index of the target in the array, or -1 if not found.
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
