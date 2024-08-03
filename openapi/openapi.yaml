@@ -10,3 +10,5 @@ servers:
 paths:
   /algorithm/binary-search:
     $ref: "algorithmBinarySearch.yaml"
+  /algorithm/buble-sort:
+    $ref: "algorithmBubbleSort.yaml"

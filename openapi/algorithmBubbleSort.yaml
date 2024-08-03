@@ -1,0 +1,23 @@
+post:
+  summary: Sort an array using Bubble Sort Algorithm
+  description: Returns the sorted array.
+  requestBody:
+    description: Array to be sorted
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/AlgorithmBubbleSortRequest'
+  responses:
+    '200':
+      description: Bubble Sort result
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AlgorithmBubbleSortResponse'
+    '400':
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

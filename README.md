@@ -1,6 +1,7 @@
 # Golang Algorithms with OpenAPI spec
 
 This repository contains a collection of algorithm implementations in Golang. Additionally, it includes examples and exercises for working with OpenAPI specifications and generating code using `oapi-codegen`.
+Inspired by https://github.com/iluwatar/30-seconds-of-java
 
 ## Getting Started
 

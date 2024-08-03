@@ -20,6 +20,24 @@ components:
         index:
           type: integer
           description: The index of the target in the array, or -1 if not found.
+    AlgorithmBubbleSortRequest:
+      type: object
+      properties:
+        array:
+          type: array
+          items:
+            type: integer
+          description: An array of integers to be sorted.
+      required:
+        - array
+    AlgorithmBubbleSortResponse:
+      type: object
+      properties:
+        sortedArray:
+          type: array
+          items:
+            type: integer
+          description: The sorted array of integers.
     ErrorResponse:
       type: object
       properties:

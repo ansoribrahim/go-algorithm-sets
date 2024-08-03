@@ -31,6 +31,18 @@ type AlgorithmBinarySearchResponse struct {
 	Index *int `json:"index,omitempty"`
 }
 
+// AlgorithmBubbleSortRequest defines model for AlgorithmBubbleSortRequest.
+type AlgorithmBubbleSortRequest struct {
+	// Array An array of integers to be sorted.
+	Array []int `json:"array"`
+}
+
+// AlgorithmBubbleSortResponse defines model for AlgorithmBubbleSortResponse.
+type AlgorithmBubbleSortResponse struct {
+	// SortedArray The sorted array of integers.
+	SortedArray *[]int `json:"sortedArray,omitempty"`
+}
+
 // ErrorResponse defines model for ErrorResponse.
 type ErrorResponse struct {
 	// Error Error message
@@ -40,11 +52,17 @@ type ErrorResponse struct {
 // AlgorithmBinarySearchJSONRequestBody defines body for AlgorithmBinarySearch for application/json ContentType.
 type AlgorithmBinarySearchJSONRequestBody = AlgorithmBinarySearchRequest
 
+// PostAlgorithmBubleSortJSONRequestBody defines body for PostAlgorithmBubleSort for application/json ContentType.
+type PostAlgorithmBubleSortJSONRequestBody = AlgorithmBubbleSortRequest
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Binary search using golang
 	// (POST /algorithm/binary-search)
 	AlgorithmBinarySearch(c *gin.Context)
+	// Sort an array using Bubble Sort Algorithm
+	// (POST /algorithm/buble-sort)
+	PostAlgorithmBubleSort(c *gin.Context)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -67,6 +85,19 @@ func (siw *ServerInterfaceWrapper) AlgorithmBinarySearch(c *gin.Context) {
 	}
 
 	siw.Handler.AlgorithmBinarySearch(c)
+}
+
+// PostAlgorithmBubleSort operation middleware
+func (siw *ServerInterfaceWrapper) PostAlgorithmBubleSort(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PostAlgorithmBubleSort(c)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -97,21 +128,24 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.POST(options.BaseURL+"/algorithm/binary-search", wrapper.AlgorithmBinarySearch)
+	router.POST(options.BaseURL+"/algorithm/buble-sort", wrapper.PostAlgorithmBubleSort)
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/7xUTW/bMAz9KwK3oxun+wAK31pgKHrYZe1t6EG1aVuFLaok3S0o8t8Hykn6kWS7bLvZ",
-	"osT3SL7HJ6hpTBQxqkD1BFL3OPr8eT50xEH78SJEz6tr9Fz33/BhQlGLJ6aErAHzbc/sV/bRoNQckgaK",
-	"UMF5dDniqHUhKnbI4pSc5GzuR9A+xMKNk6i7QyfEis0CCgiKY06sq4RQweYxrIvtyYxo/5471H3smx7d",
-	"HNtCv0BuiV2ITnucCRrmW6h1AYwPU2BsoPq+Adzh3e4e0N091mpUjvRMEkXB/aaF2ODPw8RzyLqmL6t4",
-	"5ls4Yndy6kLrIqlraYrNkRr2WH5hJj7OCi28zyq/ciOK+A6fkUQ5xO4QkB2F2NJ+qmtUsdr8tl3iwpgG",
-	"HDEqNlbnJUEBQ6hxwzD60VJ/vbrJEw862O8luV3HoYBHZJkBThfLxdJuUsLoU4AKPuajApLXPpdZ7tDL",
-	"uzytk1kauSE0a9za4o30VWNiPjRdmEWCohfUZAfUFBVjfu9TGkKdM5T3YtS2FrOv94wtVPCufPZguTFg",
-	"+Vv3rV9LU3nCfDBPNFf3Ybn811w2+slk3sx3qmsUaafBbUllq2f5/knZNrZPf5H9a7UfYHsVH/0QTHZp",
-	"0sLholsUm61l1pp3ktltDCIhdi559iMqshjXz/+XqyJHPzhBfkR2s1ftnkzj6HkFFcxT2i66KVPuaPCx",
-	"y8urk7zMDmr5NkPOue3aE0w8QAW9aqrKcqDaDz2JVmfLsyWsb9e/AgAA//84nBYxQAYAAA==",
+	"H4sIAAAAAAAC/8SVyW7bMBCGX4Vge1QspwsQ6JYARZBDgSLJrfCBlscSA4pkhsO0RuB3L4b0IkdyuiBp",
+	"bhKXmW+2n4+ydp13FiwFWT3KULfQqfR5bhqHmtruQluFqxtQWLfXcB8hEO97dB6QNKTTClGt+GMBoUbt",
+	"STsrK3luRdoRbim0JWgAgyAnQrImfmhqtS1EFwOJOYjgkGAxkYXUBF0yTCsPspKby3JdbFeyR/5X2AAN",
+	"fd+2IPLe1nXP89Kh0FZQCxmQfT51tS4kwn3UCAtZfd843Pmb7S64+R3UxChHcha8swGGSdN2AT/HwdMW",
+	"Z436Uex5C+FQnJwKvRTWkVi6aBdHYniGMs7nBm4c0kvV9d9qOJro2Z+SH8tuBjkfD4BznA8MA/lb9gHm",
+	"F0SHx8GAt4dI6ZboIATVwL6UgVDbZswRL2m7dENTN0CBI1LbfAWhO2+gA8sRaysunSyk0TVsCK3q2PTX",
+	"q9sUoibDv5dO7FIuC/kAGLKD08l0MuWTzoNVXstKfkxLhfSK2hRmufNeztM4nOTZSwlxudk4LYqhrxbc",
+	"VWPjI3NzQKALt0iVrJ0lsOm+8t7oOlko7wKjbTWMv94jLGUl35V7kSs3Clc+K2/rw5YkjJAWckVTdB+m",
+	"09dm2fRPgnlS31jXEMIyGrGFSlqa9OF30sFl+/SC9IfdPkJ7ZR+U0dx2PlIhYNJMis3UsXZtxpB7X4eg",
+	"bSO8QtUBAQZm/fx/WQnQKiMC4AOgyLPK50LsOoUrWclcpe1LEhNy44yyTXodmpBEbLSXZ2ypPxhxbuCE",
+	"M9CfikOka6CINqQC9iWLZepwfr65QH2JzAr56gM0eEVG8ppk+OCFkG8zYcOHY4Q2nxJ8jAcsGnrboXnS",
+	"gIlLbZ/g3IB95L1mJ8O5lbkrH2VEIyvZEvmqLI2rlWldoOpsejaV69n6VwAAAP//t4hc3RAKAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
